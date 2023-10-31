@@ -1,62 +1,92 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Pressable, Switch, TextInput, Alert } from 'react-native';
+import { StyleSheet, Text, View, Pressable, Switch, TextInput, Alert, Image } from 'react-native';
 import { Component } from 'react';
 
 interface State {
-    switchValue: boolean,
-    textInputValue: string
+    email: string,
+    password: string
 }
 
 export default class LoginView extends Component<State> {
   state: State = {
-    switchValue: false,
-    textInputValue: "",
+    email: "",
+    password: "",
   }
   
-  onChange = (value: boolean) => {
-    console.warn(`El switch cambió a ${value}`);
-    this.setState({switchValue: value})
-  }
+  onPressValidate = (email: string, password: string) => {
+    const regexEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    const regexPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).{8,}$/;
+    const inputFieldBlank = /^\s*$/;
 
-  onPressLearnMore = (nombre: string) => {
-    console.warn("Presionaste un botón.")
-    Alert.alert(`${nombre}`, 'Es lo que se escribió', [
-      {text: 'OK', onPress: () => console.log('OK Pressed')},
-    ]);
+    if(inputFieldBlank.test(password) || inputFieldBlank.test(email)) {
+      Alert.alert('Correo o contraseña vacíos', 'Introduzca una contraseña o correo.', [
+        {text: 'OK', onPress: () => console.log('OK Pressed Email')},
+      ]);
+      return 
+    } else {
+      if(!regexEmail.test(email)) {
+      Alert.alert(`${email}`, 'No es un correo válido', [
+        {text: 'OK', onPress: () => console.log('OK Pressed Email')},
+      ]);
+      return
+    }
+    if(!regexPassword.test(password)) {
+      Alert.alert('Contraseña inválida', 'La contraseña debe incluir al menos 8 caracteres, una mayúscula y un caracter especial', [
+        {text: 'OK', onPress: () => console.log('OK Pressed Password')},
+      ]);
+      return
+    }
+    if(regexEmail.test(email) && regexPassword.test(password)) {
+      Alert.alert('Cuenta valida', 'Haz ingresado de manera correcta', [
+        {text: 'OK', onPress: () => console.log('OK Pressed Password')},
+      ]);
+      return
+    }
+    }
+    
+
+    return true;
   } 
 
-  onTIChange = (value: string) => {
-    console.warn(`El text input cambió a ${value}`);
-    this.setState({textInputValue: value})
+  onEmailChange = (value: string) => {
+    this.setState({email: value})
+  }
+
+  onPasswordChange = (value: string) => {
+    this.setState({password: value})
   }
 
   render(){
     
     return (
       <View style={styles.container}>
+
+        <Image source={require('./assets/luffy.png')} style={[{width: 200, height: 200}]} />
+
         <TextInput
-        onChangeText={(text) => this.onTIChange(text)}
-        value={this.state.textInputValue}
-        placeholder="Escribe tu nombre"
+        value={this.state.email}
+        onChangeText={(text) => this.onEmailChange(text)}
+        inputMode='email'
+        placeholder="Escribe tu correo"
         placeholderTextColor="#000"
         />
+
+        <TextInput
+        value={this.state.password}
+        onChangeText={(text) => this.onPasswordChange(text)}
+        secureTextEntry={true}
+        placeholder="Escribe tu contraseña"
+        placeholderTextColor="#000"
+        />
+
         <Pressable
-        onPress={() => this.onPressLearnMore(this.state.textInputValue)}
-        accessibilityLabel="Learn more about this purple button"
+        onPress={() => this.onPressValidate(this.state.email, this.state.password)}
+        accessibilityLabel="Iniciar Sesión"
         style={styles.button}
         >
-           <Text style={styles.textButton}>Obtener texto</Text>
+           <Text style={styles.textButton}>Iniciar sesión</Text>
         </Pressable>
-
-
-        <Switch
-        onValueChange={() => this.onChange(!this.state.switchValue)}
-        value={this.state.switchValue}
-        trackColor={{false: '#CFCFD1', true: '#7676C2'}}
-        thumbColor={this.state.switchValue ? "#3B3B8F" : "#C0C0C2"}
-        />
-        <Text>HEMOS CAMBIADO A CLASE</Text>
-        <StatusBar style="auto" />
+        
       </View>
     );
   }
