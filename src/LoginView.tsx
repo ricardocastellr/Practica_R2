@@ -31,7 +31,7 @@ export default class LoginView extends Component<State> {
       return
     }
     if(!regexPassword.test(password)) {
-      Alert.alert('Contraseña inválida', 'La contraseña debe incluir al menos 8 caracteres, una mayúscula y un caracter especial', [
+      Alert.alert('Contraseña inválida', 'La contraseña debe incluir al menos 8 caracteres, un número, una mayúscula y un caracter especial', [
         {text: 'OK', onPress: () => console.log('OK Pressed Password')},
       ]);
       return
@@ -61,7 +61,7 @@ export default class LoginView extends Component<State> {
     return (
       <View style={styles.container}>
 
-        <Image source={require('./assets/luffy.png')} style={[{width: 200, height: 200}]} />
+        <Image source={require('./assets/luffy.png')} style={styles.Img} />
 
         <TextInput
         value={this.state.email}
@@ -69,6 +69,7 @@ export default class LoginView extends Component<State> {
         inputMode='email'
         placeholder="Escribe tu correo"
         placeholderTextColor="#000"
+        style={styles.TextInput}
         />
 
         <TextInput
@@ -77,6 +78,7 @@ export default class LoginView extends Component<State> {
         secureTextEntry={true}
         placeholder="Escribe tu contraseña"
         placeholderTextColor="#000"
+        style={styles.TextInput}
         />
 
         <Pressable
@@ -98,8 +100,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
+    flexDirection: 'column',
     justifyContent: 'center',
+    alignItems: 'center',
   },
   textButton: {
     fontSize: 17,
@@ -109,5 +112,21 @@ const styles = StyleSheet.create({
     borderColor: 'red',
     padding: 15,
     borderRadius: 100,
-  }
+    margin: 30,
+  },
+  TextInput: {
+    textAlign: "center",
+    width: 200,
+    margin: 10,
+    borderColor: 'black',
+    borderWidth: 5,
+    borderRadius: 30,
+    paddingLeft: 5,
+    paddingRight: 5,
+  },
+  Img: {
+    width: 200,
+    height: 200,
+    margin: 30,
+  },
 });
